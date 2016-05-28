@@ -55,7 +55,7 @@ server {
 ```
 server {
     location /media  {
-        alias  /home/ubuntu/projects/foo/foo/static/;
+        alias  /home/ubuntu/projects/foo/foo/media/;
     }
 
     location /static {                                                         
@@ -179,7 +179,7 @@ cd /var/log/supervisor/  # tail logs here.
 
 
 ## Optional Dotfiles I Use
-_(Skip this if you don't need it)_ If you'd like to see my **dotfiles** which make **virtualenvwrapper** easier to manage, visit my [config-ubuntu](https://github.com/JREAM/config-ubuntu/tree/master/files) repository. 
+1: _(Skip this if you don't need it)_ If you'd like to see my **dotfiles** which make **virtualenvwrapper** easier to manage, visit my [config-ubuntu](https://github.com/JREAM/config-ubuntu/tree/master/files) repository. 
 
 On your server, you can do the following:
 
@@ -196,9 +196,10 @@ vim +PluginInstall +qall
 ```
 
 
-motivated by [Dan Sackett](https://github.com/dansackett). 
+2: Otherwise, You can simply copy the `.virtualenvs` folder and the `.bashrc` file where you see the block called **PYTHON**. You will need to change the paths in `.bashrc` and the `.virtualenvs` folder. This setup was introduced to me by [Dan Sackett](https://github.com/dansackett). 
 
- You can simply copy the `.virtualenvs` folder and the `.bashrc` file where you see the block called **PYTHON**. 
 
-First, place your project on your web server. I prefer my applications in `~/projects/<projectname>` the absolute path is `/home/<username>/<projectname>`
 
+---
+
+&copy;2016 Jesse Boyer aka JREAM
