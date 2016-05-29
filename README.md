@@ -2,14 +2,25 @@
 
 These are instructions for serving **Django** and **Flask** applications in the simplest form. These are based on an Ubuntu Server.
 
-**For these examples I will use:**
+## Table of Contents
+- [Examples I'll Use](#examples-ill-use)
+- [Setup Your Project](#setup-your-project)
+- [Setup Nginx](#setup-nginx)
+- [Setup Gunicorn](#setup-gunicorn)
+    - [Test Gunicorn](#test-gunicorn)
+- [Reload Everything ](#reload-everything)
+- [Optional Dotfiles](#optional-dotfiles)
+
+## Examples I'll Use
+For these examples I will use the following.
+- This is based on an Ubuntu Box.
 - **ubuntu** as my linux user
 - **www-data** as the default server group
 - **foo** as my **Flask or Django** project name
 
 ## Setup Your Project
 
-1: Your server needs a virtual environment. I will be using **virtualenvwrapper**.
+**1:** Your server needs a virtual environment. I will be using **virtualenvwrapper**.
 
 ```
 sudo apt-get install virtualenvwrapper
@@ -17,7 +28,7 @@ sudo apt-get install virtualenvwrapper
 
 My **project path** will be `/home/ubuntu/projects/foo`
 
-2: So the first thing to do is make the virtualenvwrapper:
+**2:** So the first thing to do is make the virtualenvwrapper:
 
 ```
 mkdir ~/projects && cd ~/projects
@@ -27,17 +38,17 @@ mkproject foo
 workon foo 
 ```
 
-3: Place your Django or Flask project in `/home/ubuntu/projects/foo` 
+**3:** Place your Django or Flask project in `/home/ubuntu/projects/foo` 
 
 ## Setup Nginx
-1: First install nginx, and make a new file for our virtual host.
+**1:** First install nginx, and make a new file for our virtual host.
 ```
 sudo apt-get install nginx
 sudo touch /etc/nginx/sites-available/foo
 sudo ln -s /etc/nginx/sites-available/foo/etc/nginx/sites-enabled/foo
 ```
 
-2a: For **Flask**, Add the following
+**2a:** For **Flask**, Add the following
 ```
 server {
     location / {
@@ -51,7 +62,7 @@ server {
 }
 ```
 
-2b: For **Django** Add the following (Whatever your Paths are):
+**2b:** For **Django** Add the following (Whatever your Paths are):
 ```
 server {
     location /media  {
@@ -71,7 +82,7 @@ server {
 }
 ```
 
-3: Restart Nginx
+**3:** Restart Nginx
 ```
 sudo service nginx restart
 ```
@@ -79,13 +90,13 @@ sudo service nginx restart
 ## Setup Gunicorn
 This is the Python WSGI HTTP server.
 
-1: You should have a **requirements.txt** of some sort in your project that you made for PIP packages. Simply include **gunicorn** in your project's requirements.txt _(or include a version like I do below):_
+**1:** You should have a **requirements.txt** of some sort in your project that you made for PIP packages. Simply include **gunicorn** in your project's requirements.txt _(or include a version like I do below):_
 ```
 ...
 gunicorn==19.4.5
 ```
 
-2: Go to your project, and **make sure you are in the virtual enviroment** to install it.
+**2:** Go to your project, and **make sure you are in the virtual enviroment** to install it.
 ```
 workon foo
 pip install -r requirements.txt
@@ -94,33 +105,33 @@ pip install -r requirements.txt
 #### Test Gunicorn
 To manually test while still in your virtual environment do one of the following commands below. Then load your webserver's IP address or domain name if you pointed it. _(Services like AWS need you to open port 80 in your security policy for HTTP)_
 
-3a: For **Flask**, if you created a default `app` module, simply run it as:
+**3a:** For **Flask**, if you created a default `app` module, simply run it as:
 ```
 gunicorn app:app --bind localhost:8000
 
 ```
 
-3b: For **Django**, go to the folder your **wsgi.py** file is and run:
+**3b:** For **Django**, go to the folder your **wsgi.py** file is and run:
 ```
 gunicorn --bind localhost:8000
 ```
 
-4: If all is working as it should you can `CTRL+C` to cancel it. If you have problems, see how you run it here:  http://docs.gunicorn.org/en/stable/run.html
+**4:** If all is working as it should you can `CTRL+C` to cancel it. If you have problems, see how you run it here:  http://docs.gunicorn.org/en/stable/run.html
 
 ### Setup Supervisor
 Supervisor is a **process controller** that makes it easy to manage running programs/tasks and keep them alive.
 
-1: Install supervisor globally.
+**1:** Install supervisor globally.
 ```
 sudo apt-get install supervisor
 ```
 
-2: Create a project file for supervisor
+**2:** Create a project file for supervisor
 ```
 sudo vim /etc/supervisor/conf.d/foo.conf
 ```
 
-3a: Enter the following for **Flask**:
+**3a:** Enter the following for **Flask**:
 ```
 [program:foo]
 command = /home/ubuntu/.virtualenvs/foo/bin/gunicorn app:app --bind 0.0.0.0:8000
@@ -129,7 +140,7 @@ autorestart=true
 
 ```
 
-3b: Enter the following for **Django**:
+**3b:** Enter the following for **Django**:
 ```
 [program:foo]
 command = /home/ubuntu/.virtualenvs/foo/bin/gunicorn --bind 0.0.0.0:8000
@@ -137,8 +148,8 @@ directory = /home/ubuntu/projects/foo
 autorestart=true
 ```
 
-### Lets Reload Everything 
-1: Let's **stop any gunicorn** instances and **stop supervisor** to make sure that it loads the default configuration file and we start with a clean slate
+### Reload Everything 
+**1:** Let's **stop any gunicorn** instances and **stop supervisor** to make sure that it loads the default configuration file and we start with a clean slate
 
 ```
 sudo pkill gunicorn
@@ -146,19 +157,19 @@ sudo service supervisor stop
 sudo unlink /var/run/supervisor.sock
 ```
 
-2: Load the default configuration for supervisor and re-read the folders
+**2:** Load the default configuration for supervisor and re-read the folders
 
 ```
 sudo supervisord -c /etc/supervisor/supervisord.conf
 ```
 
-3: Now update supervisor and start our application
+**3:** Now update supervisor and start our application
 ```
 sudo supervisorctl update
 sudo supervisorctl start foo
 ```
 
-4: **You are done.** To see many of the options provided in the CLI or configuration files visit: http://supervisord.org/running.html 
+**4:** **You are done.** To see many of the options provided in the CLI or configuration files visit: http://supervisord.org/running.html 
 
 Note there are two CLI commands `supervisor` and `supervisorctl`.
 
@@ -178,10 +189,10 @@ cd /var/log/supervisor/  # tail logs here.
 ```
 
 
-## Optional Dotfiles I Use
-1: _(Skip this if you don't need it)_ If you'd like to see my **dotfiles** which make **virtualenvwrapper** easier to manage, visit my [config-ubuntu](https://github.com/JREAM/config-ubuntu/tree/master/files) repository. 
+## Optional Dotfiles
+**1:** _(Skip this if you don't need it)_ If you'd like to see my **dotfiles** which make **virtualenvwrapper** easier to manage, visit my [config-ubuntu](https://github.com/JREAM/config-ubuntu/tree/master/files) repository. 
 
-On your server, you can do the following:
+**2:** On your server, you can do the following:
 
 ```
 git clone git@github.com:JREAM/config-ubuntu.git
@@ -190,13 +201,13 @@ sudo ./install.sh
 Type a Command: dot
 ```
 
-Once that is complete, make sure to install the VIM plugins.
+**3:** Once that is complete, make sure to install the VIM plugins.
 ```
 vim +PluginInstall +qall
 ```
 
 
-2: Otherwise, You can simply copy the `.virtualenvs` folder and the `.bashrc` file where you see the block called **PYTHON**. You will need to change the paths in `.bashrc` and the `.virtualenvs` folder. This setup was introduced to me by [Dan Sackett](https://github.com/dansackett). 
+**4:** Otherwise, You can simply copy the `.virtualenvs` folder and the `.bashrc` file where you see the block called **PYTHON**. You will need to change the paths in `.bashrc` and the `.virtualenvs` folder. This setup was introduced to me by [Dan Sackett](https://github.com/dansackett). 
 
 
 
