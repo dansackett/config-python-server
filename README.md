@@ -212,5 +212,3 @@ vim +PluginInstall +qall
 
 
 ---
-
-&copy;2016 Jesse Boyer aka JREAM
