@@ -201,13 +201,8 @@ sudo ./install.sh
 Type a Command: dot
 ```
 
-**3:** Once that is complete, make sure to install the VIM plugins.
-```
-vim +PluginInstall +qall
-```
 
-
-**4:** Otherwise, You can simply copy the `.virtualenvs` folder and the `.bashrc` file where you see the block called **PYTHON**. You will need to change the paths in `.bashrc` and the `.virtualenvs` folder. This setup was introduced to me by [Dan Sackett](https://github.com/dansackett). 
+**3:** Otherwise, You can simply copy the `.virtualenvs` folder and the `.bashrc` file where you see the block called **PYTHON**. You will need to change the paths in `.bashrc` and the `.virtualenvs` folder. This setup was introduced to me by [Dan Sackett](https://github.com/dansackett). 
 
 
 
