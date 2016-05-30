@@ -4,12 +4,12 @@ These are instructions for serving **Django** and **Flask** applications in the 
 
 ## Table of Contents
 - [Examples I'll Use](#examples-ill-use)
-- [Setup Your Project](#setup-your-project)
-- [Setup Nginx](#setup-nginx)
-- [Setup Gunicorn](#setup-gunicorn)
+- [Step 1: Setup Your Project](#step-1-setup-your-project)
+- [Step 2: Setup Nginx](#step-2-setup-nginx)
+- [Step 3: Setup Gunicorn](#step-3-setup-gunicorn)
     - [Test Gunicorn](#test-gunicorn)
-- [Reload Everything ](#reload-everything)
-- [Optional Dotfiles](#optional-dotfiles)
+- [Step 4: Reload Everything ](#step-4-reload-everything)
+- Optional: [Dotfiles](#optional-dotfiles)
 
 ## Examples I'll Use
 For these examples I will use the following.
@@ -18,7 +18,7 @@ For these examples I will use the following.
 - **www-data** as the default server group
 - **foo** as my **Flask or Django** project name
 
-## Setup Your Project
+## Step 1: Setup Your Project
 
 **1:** Your server needs a virtual environment. I will be using **virtualenvwrapper**.
 
@@ -40,7 +40,7 @@ workon foo
 
 **3:** Place your Django or Flask project in `/home/ubuntu/projects/foo` 
 
-## Setup Nginx
+## Step 2: Setup Nginx
 **1:** First install nginx, and make a new file for our virtual host.
 ```
 sudo apt-get install nginx
@@ -87,7 +87,7 @@ server {
 sudo service nginx restart
 ```
 
-## Setup Gunicorn
+## Step 3: Setup Gunicorn
 This is the Python WSGI HTTP server.
 
 **1:** You should have a **requirements.txt** of some sort in your project that you made for PIP packages. Simply include **gunicorn** in your project's requirements.txt _(or include a version like I do below):_
@@ -148,7 +148,7 @@ directory = /home/ubuntu/projects/foo
 autorestart=true
 ```
 
-### Reload Everything 
+### Step 4: Reload Everything 
 **1:** Let's **stop any gunicorn** instances and **stop supervisor** to make sure that it loads the default configuration file and we start with a clean slate
 
 ```
