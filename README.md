@@ -35,17 +35,17 @@ mkdir ~/projects && cd ~/projects
 mkvirtualenv foo
 (or, if using my dotfiles below):
 mkproject foo
-workon foo 
+workon foo
 ```
 
-**3:** Place your Django or Flask project in `/home/ubuntu/projects/foo` 
+**3:** Place your Django or Flask project in `/home/ubuntu/projects/foo`
 
 ## Step 2: Setup Nginx
 **1:** First install nginx, and make a new file for our virtual host.
 ```
 sudo apt-get install nginx
 sudo touch /etc/nginx/sites-available/foo
-sudo ln -s /etc/nginx/sites-available/foo/etc/nginx/sites-enabled/foo
+sudo ln -s /etc/nginx/sites-available/foo/ etc/nginx/sites-enabled/foo
 ```
 
 **2a:** For **Flask**, Add the following
@@ -65,11 +65,22 @@ server {
 **2b:** For **Django** Add the following (Whatever your Paths are):
 ```
 server {
+  server_name www.foo.com;
+  return 301 $scheme://foo.com$request_uri;
+}
+
+server {
+
+    listen      80;
+    server_name foo.com;
+
+    charset     utf-8;
+
     location /media  {
         alias  /home/ubuntu/projects/foo/foo/media/;
     }
 
-    location /static {                                                         
+    location /static {
         alias  /home/ubuntu/projects/foo/foo/static/;
     }
 
@@ -81,6 +92,8 @@ server {
     }
 }
 ```
+
+Notice that this will redirect all traffic to www.foo.com to foo.com.
 
 **3:** Restart Nginx
 ```
@@ -148,7 +161,7 @@ directory = /home/ubuntu/projects/foo
 autorestart=true
 ```
 
-### Step 4: Reload Everything 
+### Step 4: Reload Everything
 **1:** Let's **stop any gunicorn** instances and **stop supervisor** to make sure that it loads the default configuration file and we start with a clean slate
 
 ```
